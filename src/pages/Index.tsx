@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/ui/navbar";
-import { Plane, Truck } from "lucide-react";
+import { Plane, Truck, ArrowRight } from "lucide-react";
 
 const Index = () => {
   const [textIndex, setTextIndex] = useState(0);
+  const [isTextChanging, setIsTextChanging] = useState(false);
   const dynamicTexts = [
     "Global Logistics Solutions",
     "Real-Time Flight Tracking",
@@ -17,7 +18,11 @@ const Index = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTextIndex((prevIndex) => (prevIndex + 1) % dynamicTexts.length);
+      setIsTextChanging(true);
+      setTimeout(() => {
+        setTextIndex((prevIndex) => (prevIndex + 1) % dynamicTexts.length);
+        setIsTextChanging(false);
+      }, 500);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -33,13 +38,15 @@ const Index = () => {
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Aero Logistics Nexus
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent group hover:from-accent hover:to-primary transition-all duration-500">
+                    AIRCARGO
                   </h1>
-                  <div className="h-12 md:h-16 overflow-hidden">
+                  <div className="h-12 md:h-16">
                     <p 
                       key={textIndex}
-                      className="text-xl text-accent font-semibold animate-fade-in opacity-0 animation-delay-[500ms] animation-fill-mode-forwards"
+                      className={`text-xl text-accent font-semibold transition-all duration-500 ${
+                        isTextChanging ? "opacity-0 transform -translate-y-2" : "opacity-100 transform translate-y-0"
+                      }`}
                     >
                       {dynamicTexts[textIndex]}
                     </p>
@@ -52,28 +59,34 @@ const Index = () => {
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button 
                     size="lg" 
-                    className="gap-1 bg-primary text-white hover:bg-primary/90 animate-pulse-soft" 
+                    className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0" 
                     onClick={() => navigate("/airline")}
                   >
-                    <Plane className="h-5 w-5 mr-1" />
-                    Airline Portal
+                    <span className="relative z-10 flex items-center">
+                      <Plane className="h-5 w-5 mr-2 transition-transform group-hover:translate-x-1 duration-300" />
+                      Airline Portal
+                      <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    </span>
                   </Button>
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="gap-1 animate-pulse-soft" 
+                    className="group relative overflow-hidden border-primary/50 hover:border-accent/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-accent/10 transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0" 
                     onClick={() => navigate("/cargo")}
                   >
-                    <Truck className="h-5 w-5 mr-1" />
-                    Cargo Portal
+                    <span className="relative z-10 flex items-center">
+                      <Truck className="h-5 w-5 mr-2 transition-transform group-hover:translate-x-1 duration-300" />
+                      Cargo Portal
+                      <ArrowRight className="h-4 w-4 ml-2 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    </span>
                   </Button>
                 </div>
               </div>
               <div className="flex items-center justify-center">
                 <div className="relative aspect-video overflow-hidden rounded-xl sm:w-full lg:order-last lg:rounded-3xl">
-                  <div className="bg-gradient-to-b from-accent to-accent/70 p-6 rounded-3xl flex items-center justify-center animate-float shadow-lg">
+                  <div className="bg-gradient-to-b from-accent to-accent/70 p-6 rounded-3xl flex items-center justify-center animate-float shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
                     <div className="grid grid-cols-2 gap-4 w-full h-full text-white">
-                      <div className="flex flex-col space-y-2 p-4 bg-black/20 rounded-xl">
+                      <div className="flex flex-col space-y-2 p-4 bg-black/20 rounded-xl hover:bg-black/30 transition-all duration-300 transform hover:scale-[1.02]">
                         <div className="text-sm font-bold">Popular Airlines</div>
                         <div className="text-xs opacity-75 animate-pulse-soft">
                           <div>• Emirates</div>
@@ -82,12 +95,12 @@ const Index = () => {
                           <div>• Singapore Airlines</div>
                         </div>
                         <div className="mt-auto">
-                          <div className="text-xs bg-white/10 p-1 rounded text-center animate-matrix-rain">
+                          <div className="text-xs bg-white/10 p-1 rounded text-center animate-matrix-rain hover:bg-white/20 transition-all duration-300">
                             Real-time updates
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-col space-y-2 p-4 bg-black/20 rounded-xl">
+                      <div className="flex flex-col space-y-2 p-4 bg-black/20 rounded-xl hover:bg-black/30 transition-all duration-300 transform hover:scale-[1.02]">
                         <div className="text-sm font-bold">Cargo Partners</div>
                         <div className="text-xs opacity-75 animate-pulse-soft">
                           <div>• DHL</div>
@@ -96,7 +109,7 @@ const Index = () => {
                           <div>• Maersk</div>
                         </div>
                         <div className="mt-auto">
-                          <div className="text-xs bg-white/10 p-1 rounded text-center animate-matrix-rain">
+                          <div className="text-xs bg-white/10 p-1 rounded text-center animate-matrix-rain hover:bg-white/20 transition-all duration-300">
                             Global tracking
                           </div>
                         </div>
@@ -113,7 +126,7 @@ const Index = () => {
         <section className="bg-secondary/50 py-16">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold tracking-tight">Key Platform Features</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Key Platform Features</h2>
               <p className="text-muted-foreground mt-2">
                 Everything you need to manage airline and cargo logistics
               </p>
@@ -147,11 +160,11 @@ const Index = () => {
               ].map((feature, i) => (
                 <div 
                   key={i} 
-                  className="border bg-card rounded-lg p-6 hover:shadow-md transition-all duration-300 animate-fade-in opacity-0"
+                  className="group border bg-card rounded-lg p-6 hover:shadow-md transition-all duration-300 animate-fade-in opacity-0 hover:bg-gradient-to-br hover:from-background hover:to-secondary/30 transform hover:-translate-y-1"
                   style={{ animationDelay: `${i * 150}ms`, animationFillMode: 'forwards' }}
                 >
-                  <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.desc}</p>
+                  <h3 className="text-lg font-medium mb-2 group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
+                  <p className="text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">{feature.desc}</p>
                 </div>
               ))}
             </div>
@@ -165,10 +178,10 @@ const Index = () => {
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <div className="flex items-center gap-1">
               <Plane className="h-5 w-5 text-primary" />
-              <p className="text-sm font-medium">Aero Logistics Nexus</p>
+              <p className="text-sm font-medium">AIRCARGO</p>
             </div>
             <p className="text-xs text-muted-foreground">
-              © 2025 Aero Logistics Nexus. All rights reserved.
+              © 2025 AIRCARGO. All rights reserved.
             </p>
           </div>
         </div>
