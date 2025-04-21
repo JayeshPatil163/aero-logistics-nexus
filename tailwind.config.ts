@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				gemini: {
+					purple: '#9b87f5',
+					darkPurple: '#7E69AB',
+					lightPurple: '#D6BCFA',
+					darkBg: '#1A1F2C',
+					neutral: '#8E9196'
 				}
 			},
 			borderRadius: {
@@ -135,6 +143,10 @@ export default {
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
+				},
+				'gradient-x': {
+					'0%, 100%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' }
 				}
 			},
 			animation: {
@@ -144,9 +156,10 @@ export default {
 				'fade-out': 'fade-out 0.6s ease-out',
 				'scale-in': 'scale-in 0.3s ease-out',
 				'typing': 'typing 3.5s steps(40, end), blink 0.75s step-end infinite',
-				'matrix-rain': 'matrix-rain 2s linear infinite',
-				'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
-				'float': 'float 5s ease-in-out infinite'
+				'matrix-rain': 'matrix-rain 3s linear infinite',
+				'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
+				'float': 'float 5s ease-in-out infinite',
+				'gradient-x': 'gradient-x 8s ease infinite'
 			}
 		}
 	},

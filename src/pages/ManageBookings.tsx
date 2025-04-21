@@ -16,7 +16,7 @@ const ManageBookings = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+      <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent">
         Manage Your Bookings
       </h1>
       <div className="grid gap-6">
