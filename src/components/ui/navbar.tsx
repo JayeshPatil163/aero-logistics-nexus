@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ export function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
-    // Check if user is logged in
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const role = localStorage.getItem("userRole");
     setIsLoggedIn(loggedIn);
@@ -69,15 +67,17 @@ export function Navbar() {
                 Cargo Portal
               </span>
             </Link>
-            {isLoggedIn && userRole === "admin" && (
-              <Link 
-                to="/admin" 
-                className={`transition-colors relative ${isActive('/admin') ? 'text-primary' : 'hover:text-primary'}`}
-              >
-                <span className="relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-bottom-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100">
-                  Admin Dashboard
-                </span>
-              </Link>
+            {isLoggedIn && userRole !== "admin" && (
+              <>
+                <Link 
+                  to="/manage-bookings" 
+                  className={`transition-colors relative ${isActive('/manage-bookings') ? 'text-primary' : 'hover:text-primary'}`}
+                >
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-bottom-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100">
+                    Manage Bookings
+                  </span>
+                </Link>
+              </>
             )}
           </nav>
         </div>

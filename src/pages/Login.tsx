@@ -47,16 +47,24 @@ const Login = () => {
         <CardContent className="grid gap-4">
           <div className="grid grid-cols-2 gap-6">
             <Button
-              variant={!isAdmin && roleSelected ? "outline" : "default"}
+              variant="outline"
               onClick={() => handleRoleChange("user")}
-              className="transition-all duration-200 hover:bg-gradient-to-r hover:from-primary/80 hover:to-accent/80"
+              className={`transition-all duration-200 ${
+                !roleSelected || (roleSelected && !isAdmin)
+                  ? "bg-gradient-to-r from-primary to-accent text-white"
+                  : ""
+              }`}
             >
               Regular User
             </Button>
             <Button
-              variant={isAdmin && roleSelected ? "outline" : "default"}
+              variant="outline"
               onClick={() => handleRoleChange("admin")}
-              className="transition-all duration-200 hover:bg-gradient-to-r hover:from-primary/80 hover:to-accent/80"
+              className={`transition-all duration-200 ${
+                roleSelected && isAdmin
+                  ? "bg-gradient-to-r from-primary to-accent text-white"
+                  : ""
+              }`}
             >
               Admin
             </Button>

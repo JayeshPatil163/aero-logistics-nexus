@@ -13,6 +13,8 @@ import NotFound from "./pages/NotFound";
 import BookingPage from "./pages/BookingPage"; 
 import TrackingPage from "./pages/TrackingPage";
 import ScheduleManagement from "./pages/ScheduleManagement";
+import ManageBookings from "./pages/ManageBookings";
+import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
 
@@ -31,9 +33,10 @@ const App = () => (
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/tracking" element={<TrackingPage />} />
           <Route path="/schedule-management" element={<ScheduleManagement />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/manage-bookings" element={<ManageBookings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Chatbot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

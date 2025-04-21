@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -32,19 +31,18 @@ const Index = () => {
       <Navbar />
       
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="relative overflow-hidden py-20 md:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent group hover:from-accent hover:to-primary transition-all duration-500">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-gradient-to-r from-primary via-accent to-primary bg-size-200 bg-pos-0 hover:bg-pos-100 text-transparent bg-clip-text transition-all duration-500">
                     AIRCARGO
                   </h1>
                   <div className="h-12 md:h-16">
                     <p 
                       key={textIndex}
-                      className={`text-xl text-accent font-semibold transition-all duration-500 ${
+                      className={`text-xl text-accent font-semibold transition-all duration-1000 ${
                         isTextChanging ? "opacity-0 transform -translate-y-2" : "opacity-100 transform translate-y-0"
                       }`}
                     >
@@ -59,7 +57,7 @@ const Index = () => {
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button 
                     size="lg" 
-                    className="group relative overflow-hidden bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary text-white transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0" 
+                    className="group relative overflow-hidden bg-white hover:bg-gradient-to-r hover:from-primary hover:to-accent text-primary hover:text-white transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 [&:not(:hover)+button:hover]:bg-white [&:not(:hover)+button:hover]:text-primary" 
                     onClick={() => navigate("/airline")}
                   >
                     <span className="relative z-10 flex items-center">
@@ -71,7 +69,7 @@ const Index = () => {
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="group relative overflow-hidden border-primary/50 hover:border-accent/50 hover:bg-gradient-to-r hover:from-primary/10 hover:to-accent/10 transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0" 
+                    className="group relative overflow-hidden bg-white hover:bg-gradient-to-r hover:from-primary hover:to-accent text-primary hover:text-white transition-all duration-500 shadow-md hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 [&:not(:hover)+button:hover]:bg-white [&:not(:hover)+button:hover]:text-primary" 
                     onClick={() => navigate("/cargo")}
                   >
                     <span className="relative z-10 flex items-center">
@@ -84,7 +82,7 @@ const Index = () => {
               </div>
               <div className="flex items-center justify-center">
                 <div className="relative aspect-video overflow-hidden rounded-xl sm:w-full lg:order-last lg:rounded-3xl">
-                  <div className="bg-gradient-to-b from-accent to-accent/70 p-6 rounded-3xl flex items-center justify-center animate-float shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+                  <div className="bg-gradient-to-b from-accent to-accent/70 p-6 rounded-3xl flex items-center justify-center animate-float shadow-lg hover:shadow-xl transition-all duration-2000 transform hover:-translate-y-2">
                     <div className="grid grid-cols-2 gap-4 w-full h-full text-white">
                       <div className="flex flex-col space-y-2 p-4 bg-black/20 rounded-xl hover:bg-black/30 transition-all duration-300 transform hover:scale-[1.02]">
                         <div className="text-sm font-bold">Popular Airlines</div>
@@ -122,7 +120,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Features Section */}
         <section className="bg-secondary/50 py-16">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-10">
@@ -172,7 +169,6 @@ const Index = () => {
         </section>
       </main>
 
-      {/* Footer Section */}
       <footer className="bg-muted py-6 border-t">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center gap-4 text-center">
