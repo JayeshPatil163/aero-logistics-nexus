@@ -89,7 +89,7 @@ const AirlinePortal = () => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [flights, setFlights] = useState(FLIGHTS);
   const [filteredFlights, setFilteredFlights] = useState(FLIGHTS);
-  const [selectedAirline, setSelectedAirline] = useState<string | undefined>(undefined);
+  const [selectedAirline, setSelectedAirline] = useState<string | undefined>("all");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ const AirlinePortal = () => {
   useEffect(() => {
     let result = [...flights];
     
-    if (selectedAirline) {
+    if (selectedAirline && selectedAirline !== "all") {
       result = result.filter(flight => flight.airline === selectedAirline);
     }
     
@@ -182,7 +182,7 @@ const AirlinePortal = () => {
                         <SelectValue placeholder="All Airlines" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={undefined}>All Airlines</SelectItem>
+                        <SelectItem value="all">All Airlines</SelectItem>
                         {AIRLINES.map((airline) => (
                           <SelectItem key={airline} value={airline}>
                             {airline}
@@ -233,7 +233,7 @@ const AirlinePortal = () => {
                     variant="outline" 
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
                     onClick={() => {
-                      setSelectedAirline(undefined);
+                      setSelectedAirline("all");
                       setSelectedDate(new Date());
                       setSearchQuery("");
                     }}

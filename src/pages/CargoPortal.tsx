@@ -97,8 +97,8 @@ const CargoPortal = () => {
   const [shipments, setShipments] = useState(ALL_SHIPMENTS);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredShipments, setFilteredShipments] = useState(ALL_SHIPMENTS);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [transportFilter, setTransportFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [transportFilter, setTransportFilter] = useState<string>("all");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,11 +116,11 @@ const CargoPortal = () => {
       );
     }
 
-    if (statusFilter) {
+    if (statusFilter && statusFilter !== "all") {
       result = result.filter(shipment => shipment.status === statusFilter);
     }
 
-    if (transportFilter) {
+    if (transportFilter && transportFilter !== "all") {
       result = result.filter(shipment => shipment.transportMode === transportFilter);
     }
 
@@ -191,7 +191,7 @@ const CargoPortal = () => {
                         <SelectValue placeholder="All Statuses" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Statuses</SelectItem>
+                        <SelectItem value="all">All Statuses</SelectItem>
                         <SelectItem value="Scheduled">Scheduled</SelectItem>
                         <SelectItem value="In Transit">In Transit</SelectItem>
                         <SelectItem value="Customs Clearance">Customs Clearance</SelectItem>
@@ -208,7 +208,7 @@ const CargoPortal = () => {
                         <SelectValue placeholder="All Modes" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Modes</SelectItem>
+                        <SelectItem value="all">All Modes</SelectItem>
                         <SelectItem value="Air">Air</SelectItem>
                         <SelectItem value="Sea">Sea</SelectItem>
                         <SelectItem value="Land">Land</SelectItem>
@@ -221,8 +221,8 @@ const CargoPortal = () => {
                     className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
                     onClick={() => {
                       setSearchQuery("");
-                      setStatusFilter("");
-                      setTransportFilter("");
+                      setStatusFilter("all");
+                      setTransportFilter("all");
                     }}
                   >
                     Reset Filters
