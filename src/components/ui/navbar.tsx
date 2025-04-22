@@ -3,15 +3,17 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Plane, Truck, LogOut, User, Calendar } from "lucide-react";
+import { Menu, Plane, Truck, LogOut, User, Calendar, SunMoon } from "lucide-react";
 import { toast } from "sonner";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { useTheme } from "@/hooks/use-theme";
 
 export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -97,6 +99,16 @@ export function Navbar() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            className="mr-2"
+            aria-label="Toggle theme"
+          >
+            <SunMoon className="h-5 w-5" />
+          </Button>
+
           {isLoggedIn ? (
             <div className="flex items-center space-x-4">
               <HoverCard>
@@ -160,6 +172,18 @@ export function Navbar() {
                     Schedule Management
                   </Link>
                 )}
+                <div className="flex items-center space-x-2">
+                  <span>Theme:</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={toggleTheme}
+                    className="h-8"
+                  >
+                    <SunMoon className="h-4 w-4 mr-2" />
+                    {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </Button>
+                </div>
                 <hr className="my-3" />
                 {isLoggedIn ? (
                   <Button variant="outline" onClick={handleLogout} className="gemini-hover-effect">

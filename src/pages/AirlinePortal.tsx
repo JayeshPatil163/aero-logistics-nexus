@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/ui/navbar";
@@ -418,7 +419,7 @@ const AirlinePortal = () => {
               <Card className="gemini-card overflow-hidden animate-float">
                 <CardHeader className="bg-gradient-to-r from-[#9b87f5]/10 to-[#33C3F0]/10">
                   <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-[#9b87f5] to-[#33C3F0]">
-                    Gemini-Inspired Flight Network
+                    Matrix Flight Network
                   </CardTitle>
                   <CardDescription>
                     Interactive visualization of global flight connections
