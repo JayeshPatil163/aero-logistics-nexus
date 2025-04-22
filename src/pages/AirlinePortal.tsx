@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/ui/navbar";
@@ -28,7 +27,6 @@ import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 
-// Mock data for flights
 const AIRLINES = [
   "Emirates", "Lufthansa", "Qatar Airways", "Singapore Airlines", 
   "Delta", "United", "British Airways", "Air France"
@@ -96,14 +94,12 @@ const AirlinePortal = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     const role = localStorage.getItem("userRole");
     setIsLoggedIn(loggedIn);
     setUserRole(role);
   }, []);
 
-  // Filter flights based on selected airline, date and search query
   useEffect(() => {
     let result = [...flights];
     
@@ -148,8 +144,7 @@ const AirlinePortal = () => {
       return;
     }
     
-    // Navigate to booking page with flight details
-    navigate(`/book-flight/${flight.id}`, { state: { flight } });
+    navigate(`/book-flight/${flight.id}`);
   };
 
   return (

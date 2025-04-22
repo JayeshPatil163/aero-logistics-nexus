@@ -1,8 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Plane, Truck, LogOut, User } from "lucide-react";
+import { Menu, Plane, Truck, LogOut, User, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
@@ -79,6 +80,20 @@ export function Navbar() {
                 </Link>
               </>
             )}
+            {/* Add Admin Schedule Management Link */}
+            {isLoggedIn && userRole === "admin" && (
+              <>
+                <Link 
+                  to="/schedule-management" 
+                  className={`transition-colors relative ${isActive('/schedule-management') ? 'text-primary' : 'hover:text-primary'}`}
+                >
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-bottom-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100 flex items-center">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    Schedule Management
+                  </span>
+                </Link>
+              </>
+            )}
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
@@ -91,10 +106,10 @@ export function Navbar() {
                     <span className="sr-only">User profile</span>
                   </Button>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-56">
+                <HoverCardContent className="w-56 gemini-card">
                   <div className="flex justify-between space-x-4">
                     <div className="space-y-1">
-                      <h4 className="text-sm font-semibold">Profile</h4>
+                      <h4 className="text-sm font-semibold gemini-gradient-text">Profile</h4>
                       <p className="text-sm text-muted-foreground">
                         You are logged in as a {userRole === "admin" ? "Admin" : "Regular User"}
                       </p>
@@ -128,9 +143,9 @@ export function Navbar() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
+            <SheetContent side="right" className="gemini-card">
               <nav className="grid gap-6 text-lg font-medium">
-                <Link to="/" className="hover:text-primary">
+                <Link to="/" className="hover:text-primary gemini-gradient-text">
                   Home
                 </Link>
                 <Link to="/airline" className="hover:text-primary">
@@ -140,18 +155,19 @@ export function Navbar() {
                   Cargo Portal
                 </Link>
                 {isLoggedIn && userRole === "admin" && (
-                  <Link to="/admin" className="hover:text-primary">
-                    Admin Dashboard
+                  <Link to="/schedule-management" className="hover:text-primary flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Schedule Management
                   </Link>
                 )}
                 <hr className="my-3" />
                 {isLoggedIn ? (
-                  <Button variant="outline" onClick={handleLogout}>
+                  <Button variant="outline" onClick={handleLogout} className="gemini-hover-effect">
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
                   </Button>
                 ) : (
-                  <Button onClick={() => navigate("/login")} className="bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary">
+                  <Button onClick={() => navigate("/login")} className="bg-gradient-to-r from-primary to-accent hover:from-accent hover:to-primary gemini-hover-effect">
                     Login
                   </Button>
                 )}
