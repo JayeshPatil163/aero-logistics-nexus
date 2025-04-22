@@ -75,8 +75,9 @@ const bookingFormSchema = z.object({
   mealPreference: z.string().optional(),
   addBaggage: z.boolean().default(false),
   insurance: z.boolean().default(false),
-  acceptTerms: z.literal(true, {
-    errorMap: () => ({ message: "You must accept the terms and conditions" }),
+  // Fix error #1: Change the literal true to a boolean with a custom error message
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions",
   }),
 });
 
@@ -150,6 +151,7 @@ const BookFlightPage = () => {
     });
   };
 
+  // Fix error #2: Update the onSubmit function to accept both form data and button events
   const onSubmit = (data: z.infer<typeof bookingFormSchema>) => {
     setIsProcessing(true);
     
@@ -159,6 +161,11 @@ const BookFlightPage = () => {
       toast.success("Booking successful! Your e-ticket has been sent to your email.");
       navigate("/manage-bookings");
     }, 2000);
+  };
+
+  // Create a handler for the button click that works with MouseEvent
+  const handleCompleteBooking = () => {
+    form.handleSubmit(onSubmit)();
   };
 
   const renderSeatMap = () => (
@@ -785,8 +792,9 @@ const BookFlightPage = () => {
                     >
                       Back
                     </Button>
+                    {/* Fix error #2: Changed the onClick handler from onSubmit to handleCompleteBooking */}
                     <Button 
-                      onClick={onSubmit}
+                      onClick={handleCompleteBooking}
                       disabled={isProcessing}
                       className="bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] hover:shadow-lg transition-all duration-300"
                     >
