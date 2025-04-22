@@ -26,6 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarIcon, Plane } from "lucide-react";
 import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
 // Mock data for flights
 const AIRLINES = [
@@ -58,6 +59,7 @@ const generateFlights = () => {
     arrivalTime.setHours(arrivalTime.getHours() + Math.floor(1 + Math.random() * 14));
     
     const status = Math.random() > 0.8 ? "Delayed" : "On Time";
+    const price = Math.floor(300 + Math.random() * 1500);
     
     flights.push({
       id: i,
@@ -69,7 +71,9 @@ const generateFlights = () => {
       arrivalTime,
       status,
       gate: `${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(1 + Math.random() * 20)}`,
-      terminal: Math.floor(1 + Math.random() * 5)
+      terminal: Math.floor(1 + Math.random() * 5),
+      price,
+      currency: "USD"
     });
   }
   return flights;
@@ -131,14 +135,21 @@ const AirlinePortal = () => {
     setFilteredFlights(result);
   }, [flights, selectedAirline, selectedDate, searchQuery]);
 
-  const handleBooking = (flightId: number) => {
+  const handleBooking = (flight: any) => {
     if (!isLoggedIn) {
+      toast.error("Please log in to book a flight");
       navigate("/login");
       return;
     }
     
-    // In a real app, navigate to booking page with flight ID
-    alert(`Booking flight with ID: ${flightId}`);
+    if (userRole === "admin") {
+      toast.info("As an admin, you can manage schedules instead of booking");
+      navigate("/schedule-management");
+      return;
+    }
+    
+    // Navigate to booking page with flight details
+    navigate(`/book-flight/${flight.id}`, { state: { flight } });
   };
 
   return (
@@ -148,7 +159,9 @@ const AirlinePortal = () => {
       <main className="flex-1 container px-4 py-8 md:px-6 md:py-12">
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Airline Portal</h1>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl gemini-gradient-text animate-gradient-x">
+              Airline Portal
+            </h1>
             <p className="text-muted-foreground mt-2">
               View real-time flight schedules and book your next journey
             </p>
@@ -156,9 +169,11 @@ const AirlinePortal = () => {
           
           <div className="grid gap-6 md:grid-cols-[250px_1fr]">
             <div className="space-y-6">
-              <Card>
+              <Card className="gemini-card">
                 <CardHeader>
-                  <CardTitle>Filter Flights</CardTitle>
+                  <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-[#9b87f5] to-[#33C3F0]">
+                    Filter Flights
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -167,7 +182,7 @@ const AirlinePortal = () => {
                       value={selectedAirline} 
                       onValueChange={(value) => setSelectedAirline(value)}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="border-primary/20 focus:ring-primary/30">
                         <SelectValue placeholder="All Airlines" />
                       </SelectTrigger>
                       <SelectContent>
@@ -187,7 +202,7 @@ const AirlinePortal = () => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal"
+                          className="w-full justify-start text-left font-normal border-primary/20 focus:ring-primary/30"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {selectedDate ? (
@@ -214,12 +229,13 @@ const AirlinePortal = () => {
                       placeholder="Flight number, airport..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      className="border-primary/20 focus:ring-primary/30"
                     />
                   </div>
                   
                   <Button 
                     variant="outline" 
-                    className="w-full" 
+                    className="w-full border-primary/20 hover:bg-primary/5 transition-all duration-300" 
                     onClick={() => {
                       setSelectedAirline(undefined);
                       setSelectedDate(new Date());
@@ -235,9 +251,13 @@ const AirlinePortal = () => {
             <div className="space-y-6">
               <Tabs defaultValue="departures">
                 <div className="flex justify-between items-center">
-                  <TabsList>
-                    <TabsTrigger value="departures">Departures</TabsTrigger>
-                    <TabsTrigger value="arrivals">Arrivals</TabsTrigger>
+                  <TabsList className="bg-secondary">
+                    <TabsTrigger value="departures" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Departures
+                    </TabsTrigger>
+                    <TabsTrigger value="arrivals" className="data-[state=active]:bg-primary data-[state=active]:text-white">
+                      Arrivals
+                    </TabsTrigger>
                   </TabsList>
                   
                   <div className="text-sm text-muted-foreground">
@@ -245,25 +265,26 @@ const AirlinePortal = () => {
                   </div>
                 </div>
                 
-                <TabsContent value="departures" className="animate-fade-in animation-fill-mode-forwards">
-                  <Card>
+                <TabsContent value="departures" className="animate-fade-in">
+                  <Card className="gemini-card">
                     <CardContent className="p-0">
                       <Table>
                         <TableHeader>
-                          <TableRow className="bg-muted/50">
+                          <TableRow className="bg-muted/50 hover:bg-muted/50">
                             <TableHead>Flight</TableHead>
                             <TableHead>Airline</TableHead>
                             <TableHead>Departure</TableHead>
                             <TableHead>Destination</TableHead>
                             <TableHead>Time</TableHead>
                             <TableHead>Status</TableHead>
+                            <TableHead>Price</TableHead>
                             <TableHead>Actions</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
                           {filteredFlights.length > 0 ? (
                             filteredFlights.map((flight) => (
-                              <TableRow key={flight.id} className="group hover:bg-muted/50 transition-colors cursor-default">
+                              <TableRow key={flight.id} className="group hover:bg-muted/50 transition-colors cursor-default gemini-hover-effect">
                                 <TableCell className="font-medium">
                                   <div className="flex items-center">
                                     <Plane className="h-4 w-4 mr-2 text-primary" />
@@ -296,11 +317,14 @@ const AirlinePortal = () => {
                                     {flight.status}
                                   </span>
                                 </TableCell>
+                                <TableCell className="font-medium text-primary">
+                                  ${flight.price}
+                                </TableCell>
                                 <TableCell>
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handleBooking(flight.id)}
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={() => handleBooking(flight)}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] hover:shadow-md"
                                   >
                                     Book
                                   </Button>
@@ -309,7 +333,7 @@ const AirlinePortal = () => {
                             ))
                           ) : (
                             <TableRow>
-                              <TableCell colSpan={7} className="h-24 text-center">
+                              <TableCell colSpan={8} className="h-24 text-center">
                                 No flights found.
                               </TableCell>
                             </TableRow>
@@ -320,12 +344,12 @@ const AirlinePortal = () => {
                   </Card>
                 </TabsContent>
                 
-                <TabsContent value="arrivals" className="animate-fade-in animation-fill-mode-forwards">
-                  <Card>
+                <TabsContent value="arrivals" className="animate-fade-in">
+                  <Card className="gemini-card">
                     <CardContent className="p-0">
                       <Table>
                         <TableHeader>
-                          <TableRow className="bg-muted/50">
+                          <TableRow className="bg-muted/50 hover:bg-muted/50">
                             <TableHead>Flight</TableHead>
                             <TableHead>Airline</TableHead>
                             <TableHead>Origin</TableHead>
@@ -338,7 +362,7 @@ const AirlinePortal = () => {
                         <TableBody>
                           {filteredFlights.length > 0 ? (
                             filteredFlights.map((flight) => (
-                              <TableRow key={flight.id} className="group hover:bg-muted/50 transition-colors cursor-default">
+                              <TableRow key={flight.id} className="group hover:bg-muted/50 transition-colors cursor-default gemini-hover-effect">
                                 <TableCell className="font-medium">
                                   <div className="flex items-center">
                                     <Plane className="h-4 w-4 mr-2 text-primary" />
@@ -374,8 +398,8 @@ const AirlinePortal = () => {
                                 <TableCell>
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handleBooking(flight.id)}
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                    onClick={() => handleBooking(flight)}
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] hover:shadow-md"
                                   >
                                     Book
                                   </Button>
@@ -396,24 +420,26 @@ const AirlinePortal = () => {
                 </TabsContent>
               </Tabs>
               
-              <Card>
-                <CardHeader>
-                  <CardTitle>Matrix-Inspired Flight Network</CardTitle>
+              <Card className="gemini-card overflow-hidden animate-float">
+                <CardHeader className="bg-gradient-to-r from-[#9b87f5]/10 to-[#33C3F0]/10">
+                  <CardTitle className="text-transparent bg-clip-text bg-gradient-to-r from-[#9b87f5] to-[#33C3F0]">
+                    Gemini-Inspired Flight Network
+                  </CardTitle>
                   <CardDescription>
                     Interactive visualization of global flight connections
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-[300px] rounded-md border bg-black text-green-500 p-4 font-mono text-sm overflow-hidden relative">
-                    <div className="absolute inset-0 flex items-center justify-center opacity-40">
+                  <div className="h-[300px] rounded-md border bg-gradient-to-br from-[#1A1F2C] to-[#2A2F3C] text-green-500 p-4 font-mono text-sm overflow-hidden relative">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-30">
                       <div className="grid grid-cols-12 gap-1 w-full h-full">
                         {Array.from({ length: 12 * 20 }).map((_, i) => (
                           <div 
                             key={i} 
                             className="animate-matrix-rain" 
                             style={{ 
-                              animationDelay: `${Math.random() * 2}s`,
-                              animationDuration: `${1 + Math.random() * 3}s`
+                              animationDelay: `${Math.random() * 3}s`,
+                              animationDuration: `${2 + Math.random() * 4}s`
                             }}
                           >
                             {Math.random() > 0.5 ? '1' : '0'}
@@ -457,10 +483,10 @@ const AirlinePortal = () => {
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <div className="flex items-center gap-1">
               <Plane className="h-5 w-5 text-primary" />
-              <p className="text-sm font-medium">Aero Logistics Nexus</p>
+              <p className="text-sm font-medium">AIRCARGO</p>
             </div>
             <p className="text-xs text-muted-foreground">
-              © 2025 Aero Logistics Nexus. All rights reserved.
+              © 2025 AIRCARGO. All rights reserved.
             </p>
           </div>
         </div>

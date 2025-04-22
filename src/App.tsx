@@ -14,6 +14,8 @@ import BookingPage from "./pages/BookingPage";
 import TrackingPage from "./pages/TrackingPage";
 import ScheduleManagement from "./pages/ScheduleManagement";
 import ManageBookings from "./pages/ManageBookings";
+import BookFlightPage from "./pages/BookFlightPage";
+import CargoTrackingDetailPage from "./pages/CargoTrackingDetailPage";
 import Chatbot from "./components/Chatbot";
 
 const queryClient = new QueryClient();
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/tracking" element={<TrackingPage />} />
           <Route path="/schedule-management" element={<ScheduleManagement />} />
           <Route path="/manage-bookings" element={<ManageBookings />} />
+          <Route path="/book-flight/:flightId?" element={<BookFlightPage />} />
+          <Route path="/cargo-tracking/:trackingId?" element={<CargoTrackingDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Chatbot />

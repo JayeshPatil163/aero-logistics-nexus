@@ -91,6 +91,29 @@
 
   body {
     @apply bg-background text-foreground;
+    background-image: 
+      radial-gradient(circle at 100% 100%, rgba(155, 135, 245, 0.1) 0%, transparent 25%),
+      radial-gradient(circle at 0% 0%, rgba(51, 195, 240, 0.1) 0%, transparent 25%);
+    background-attachment: fixed;
+  }
+  
+  /* Gemini-inspired gradient text */
+  .gemini-gradient-text {
+    @apply bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] bg-clip-text text-transparent;
+  }
+  
+  /* Gemini-inspired gradient button */
+  .gemini-gradient-button {
+    @apply bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] text-white transition-all duration-300;
+  }
+  
+  .gemini-gradient-button:hover {
+    @apply bg-gradient-to-r from-[#8a76e4] to-[#22b2df] shadow-md;
+  }
+  
+  /* Gemini-inspired accent elements */
+  .gemini-accent {
+    @apply border-l-4 border-[#9b87f5];
   }
 }
 
@@ -121,6 +144,37 @@
 
   .animate-matrix-rain {
     animation: matrix-rain 3s linear infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .hover-lift {
+    @apply transition-transform duration-300;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-5px);
+  }
+  
+  .gemini-card {
+    @apply bg-white/80 backdrop-blur-sm border-2 border-primary/10 hover:border-primary/30 
+    hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden;
+  }
+  
+  .gemini-hover-effect {
+    @apply relative overflow-hidden;
+  }
+  
+  .gemini-hover-effect::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 
+    bg-gradient-to-tr from-[#9b87f5]/10 to-[#33C3F0]/10;
+  }
+  
+  .gemini-hover-effect:hover::after {
+    @apply opacity-100;
   }
 }
 
@@ -190,4 +244,15 @@
 @keyframes blink {
   0%, 100% { border-color: transparent }
   50% { border-color: currentColor }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 5px rgba(155, 135, 245, 0.1), 
+                0 0 10px rgba(155, 135, 245, 0.1);
+  }
+  to {
+    box-shadow: 0 0 10px rgba(51, 195, 240, 0.3), 
+                0 0 20px rgba(51, 195, 240, 0.2);
+  }
 }
