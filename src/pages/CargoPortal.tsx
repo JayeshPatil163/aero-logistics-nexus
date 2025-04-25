@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/ui/navbar";
@@ -23,8 +22,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { format, addDays } from "date-fns";
-import { Package, ArrowRight, Search, Truck, Plane, Ship, LocateFixed } from "lucide-react";
+import { Package, ArrowRight, Search, Truck, Plane, Ship, LocateFixed, Download } from "lucide-react";
 import { toast } from "sonner";
+import { generateExcelReport } from "@/utils/excelUtils";
 
 // Mock companies
 const COMPANIES = [
@@ -127,12 +127,37 @@ const CargoPortal = () => {
     setFilteredShipments(result);
   }, [shipments, searchQuery, statusFilter, transportFilter]);
 
-  // Function to handle tracking a shipment
+  const handleGenerateReport = () => {
+    const reportData = filteredShipments.map(shipment => ({
+      TrackingID: shipment.trackingId,
+      Company: shipment.company,
+      Origin: shipment.origin,
+      Destination: shipment.destination,
+      CargoType: shipment.cargoType,
+      Weight: `${shipment.weight} kg`,
+      Volume: `${shipment.volume} m³`,
+      DepartureDate: format(shipment.departureDate, 'yyyy-MM-dd'),
+      ArrivalDate: format(shipment.arrivalDate, 'yyyy-MM-dd'),
+      Status: shipment.status,
+      TransportMode: shipment.transportMode
+    }));
+
+    const success = generateExcelReport(
+      reportData, 
+      `AirCargo_Shipments_${format(new Date(), 'yyyy-MM-dd')}.xlsx`
+    );
+    
+    if (success) {
+      toast.success("Cargo schedule report generated successfully!");
+    } else {
+      toast.error("Failed to generate report. Please try again.");
+    }
+  };
+
   const handleTrackShipment = (trackingId: string) => {
     navigate(`/cargo-tracking/${trackingId}`);
   };
 
-  // Function to get icon based on transport mode
   const getTransportIcon = (mode: string) => {
     switch (mode) {
       case "Air":
@@ -152,13 +177,23 @@ const CargoPortal = () => {
       
       <main className="flex-1 container py-8 px-4 md:px-6 md:py-10">
         <div className="space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight gemini-gradient-text animate-gradient-x md:text-4xl">
-              Cargo Shipment Portal
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Track and manage your cargo shipments around the world
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight gemini-gradient-text animate-gradient-x md:text-4xl">
+                Cargo Shipment Portal
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Track and manage your cargo shipments around the world
+              </p>
+            </div>
+            
+            <Button 
+              onClick={handleGenerateReport} 
+              className="bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] hover:opacity-90"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Generate Report
+            </Button>
           </div>
           
           <div className="grid gap-6 md:grid-cols-[250px_1fr]">

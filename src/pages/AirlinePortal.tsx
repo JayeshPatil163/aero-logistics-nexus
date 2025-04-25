@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/ui/navbar";
@@ -23,10 +22,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, Plane } from "lucide-react";
+import { Calendar as CalendarIcon, Plane, Download } from "lucide-react";
 import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { generateExcelReport } from "@/utils/excelUtils";
 
 const AIRLINES = [
   "Emirates", "Lufthansa", "Qatar Airways", "Singapore Airlines", 
@@ -148,19 +148,55 @@ const AirlinePortal = () => {
     navigate(`/book-flight/${flight.id}`);
   };
 
+  const handleGenerateReport = () => {
+    const reportData = filteredFlights.map(flight => ({
+      FlightNumber: flight.flightNumber,
+      Airline: flight.airline,
+      Origin: flight.departure,
+      Destination: flight.arrival,
+      DepartureTime: formatTime(flight.departureTime),
+      ArrivalTime: formatTime(flight.arrivalTime),
+      Status: flight.status,
+      Terminal: flight.terminal,
+      Gate: flight.gate,
+      Price: `$${flight.price}`
+    }));
+
+    const success = generateExcelReport(
+      reportData, 
+      `AirCargo_Flights_${format(new Date(), 'yyyy-MM-dd')}.xlsx`
+    );
+    
+    if (success) {
+      toast.success("Flight schedule report generated successfully!");
+    } else {
+      toast.error("Failed to generate report. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
       <main className="flex-1 container px-4 py-8 md:px-6 md:py-12">
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl gemini-gradient-text animate-gradient-x">
-              Airline Portal
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              View real-time flight schedules and book your next journey
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight md:text-4xl gemini-gradient-text animate-gradient-x">
+                Airline Portal
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                View real-time flight schedules and book your next journey
+              </p>
+            </div>
+            
+            <Button 
+              onClick={handleGenerateReport} 
+              className="bg-gradient-to-r from-[#9b87f5] to-[#33C3F0] hover:opacity-90"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Generate Report
+            </Button>
           </div>
           
           <div className="grid gap-6 md:grid-cols-[250px_1fr]">
