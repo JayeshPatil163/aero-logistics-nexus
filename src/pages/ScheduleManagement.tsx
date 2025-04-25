@@ -8,8 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toggle } from "@/components/ui/toggle";
-import { CalendarPlus, Plus, Edit, Trash2, Plane, Truck, Save, X, Clock, Check } from "lucide-react";
+import { CalendarPlus, Plus, Edit, Trash2, Plane, Truck, Save, X, Clock, Check, Download } from "lucide-react";
 import { toast } from "sonner";
+import { generateExcelReport } from "@/utils/excelUtils";
 
 interface Schedule {
   id: string;
@@ -101,10 +102,14 @@ const ScheduleManagement = () => {
     
     // Simulate API call
     setTimeout(() => {
-      setSchedules([...schedules, newSchedule]);
+      const updatedSchedules = [...schedules, newSchedule];
+      setSchedules(updatedSchedules);
       setIsLoading(false);
       formElement.reset();
       toast.success(`New ${scheduleType} schedule added successfully!`);
+      
+      // Save to Excel file
+      saveSchedulesToExcel(updatedSchedules, scheduleType);
     }, 1000);
   };
 
@@ -135,37 +140,104 @@ const ScheduleManagement = () => {
     
     // Simulate API call
     setTimeout(() => {
-      setSchedules(schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s));
+      const updatedSchedules = schedules.map(s => s.id === updatedSchedule.id ? updatedSchedule : s);
+      setSchedules(updatedSchedules);
       setIsLoading(false);
       setEditingSchedule(null);
       toast.success("Schedule updated successfully!");
+      
+      // Save to Excel file
+      saveSchedulesToExcel(updatedSchedules, updatedSchedule.type);
     }, 1000);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingSchedule(null);
   };
 
   const handleDeleteSchedule = (id: string) => {
     if (window.confirm("Are you sure you want to delete this schedule?")) {
       setIsLoading(true);
       
+      // Get the schedule type before deleting
+      const scheduleToDelete = schedules.find(s => s.id === id);
+      const scheduleTypeToUpdate = scheduleToDelete?.type;
+      
       // Simulate API call
       setTimeout(() => {
-        setSchedules(schedules.filter(s => s.id !== id));
+        const updatedSchedules = schedules.filter(s => s.id !== id);
+        setSchedules(updatedSchedules);
         setIsLoading(false);
         toast.success("Schedule deleted successfully!");
+        
+        // Save to Excel file if we have a valid type
+        if (scheduleTypeToUpdate) {
+          saveSchedulesToExcel(updatedSchedules, scheduleTypeToUpdate);
+        }
       }, 1000);
     }
   };
 
   const handleStatusChange = (id: string, status: "active" | "delayed" | "cancelled") => {
-    setSchedules(
-      schedules.map(s => 
-        s.id === id ? { ...s, status } : s
-      )
+    const updatedSchedules = schedules.map(s => 
+      s.id === id ? { ...s, status } : s
     );
+    
+    setSchedules(updatedSchedules);
     toast.success(`Status updated to ${status}`);
+    
+    // Get the schedule type before updating
+    const scheduleToUpdate = updatedSchedules.find(s => s.id === id);
+    if (scheduleToUpdate) {
+      saveSchedulesToExcel(updatedSchedules, scheduleToUpdate.type);
+    }
+  };
+  
+  const handleGenerateReport = () => {
+    // Filter schedules based on current type selection
+    const filteredSchedules = schedules.filter(s => s.type === scheduleType);
+    
+    // Format for Excel report
+    const reportData = filteredSchedules.map(schedule => ({
+      ID: schedule.id,
+      Name: schedule.name,
+      Origin: schedule.origin,
+      Destination: schedule.destination,
+      DepartureDate: schedule.departureDate,
+      DepartureTime: schedule.departureTime,
+      ArrivalDate: schedule.arrivalDate,
+      ArrivalTime: schedule.arrivalTime,
+      Status: schedule.status
+    }));
+
+    const success = generateExcelReport(
+      reportData, 
+      `AirCargo_${scheduleType === 'airline' ? 'Flights' : 'Cargo'}_Schedules.xlsx`
+    );
+    
+    if (success) {
+      toast.success(`${scheduleType === 'airline' ? 'Flight' : 'Cargo'} schedule report generated successfully!`);
+    } else {
+      toast.error("Failed to generate report. Please try again.");
+    }
+  };
+  
+  // Function to save schedules to Excel
+  const saveSchedulesToExcel = (schedulesToSave: Schedule[], type: "airline" | "cargo") => {
+    // Filter by type
+    const typeSchedules = schedulesToSave.filter(s => s.type === type);
+    
+    // Format for Excel
+    const reportData = typeSchedules.map(schedule => ({
+      ID: schedule.id,
+      Name: schedule.name,
+      Origin: schedule.origin,
+      Destination: schedule.destination,
+      DepartureDate: schedule.departureDate,
+      DepartureTime: schedule.departureTime,
+      ArrivalDate: schedule.arrivalDate,
+      ArrivalTime: schedule.arrivalTime,
+      Status: schedule.status
+    }));
+
+    const fileName = `AirCargo_${type === 'airline' ? 'Flights' : 'Cargo'}_Schedules.xlsx`;
+    generateExcelReport(reportData, fileName);
   };
 
   const StatusToggleGroup = ({ id, currentStatus }: { id: string, currentStatus: string }) => (
@@ -208,18 +280,27 @@ const ScheduleManagement = () => {
                 <h1 className="text-3xl font-bold tracking-tight">Schedule Management</h1>
                 <p className="text-muted-foreground">Add, edit or remove airline and cargo schedules</p>
               </div>
-              <Tabs defaultValue="airline" className="w-full md:w-auto" onValueChange={(v) => setScheduleType(v as "airline" | "cargo")}>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="airline" className="flex items-center">
-                    <Plane className="mr-2 h-4 w-4" />
-                    Airline
-                  </TabsTrigger>
-                  <TabsTrigger value="cargo" className="flex items-center">
-                    <Truck className="mr-2 h-4 w-4" />
-                    Cargo
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div className="flex gap-2 items-center">
+                <Tabs defaultValue="airline" className="w-full md:w-auto" onValueChange={(v) => setScheduleType(v as "airline" | "cargo")}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="airline" className="flex items-center">
+                      <Plane className="mr-2 h-4 w-4" />
+                      Airline
+                    </TabsTrigger>
+                    <TabsTrigger value="cargo" className="flex items-center">
+                      <Truck className="mr-2 h-4 w-4" />
+                      Cargo
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+                <Button 
+                  onClick={handleGenerateReport}
+                  className="bg-primary hover:bg-primary/90 flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Generate Report
+                </Button>
+              </div>
             </div>
 
             {editingSchedule ? (
