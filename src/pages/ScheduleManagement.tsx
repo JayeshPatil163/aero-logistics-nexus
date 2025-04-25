@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
@@ -116,6 +115,10 @@ const ScheduleManagement = () => {
   const handleEditSchedule = (schedule: Schedule) => {
     setEditingSchedule(schedule);
     setScheduleType(schedule.type);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingSchedule(null);
   };
 
   const handleSaveEdit = (event: React.FormEvent) => {
