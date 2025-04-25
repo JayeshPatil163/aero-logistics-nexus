@@ -6,8 +6,26 @@ import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { signInWithPopup, provider, auth } from "@/firebase";
+import { provider, auth } from "@/firebase";
 import { LogIn } from "lucide-react";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  onAuthStateChanged 
+} from "firebase/auth";
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
 
 const Login = () => {
   const [roleSelected, setRoleSelected] = useState(false);

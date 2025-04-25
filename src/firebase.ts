@@ -3,12 +3,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZXjYNYsp8tUHCpaSNi7x0PnV9Hlxwvfg",
+  apiKey: "AIzaSyBJOlreS5uly_0HpFM-AMGa-Ts4Itnpifc",
   authDomain: "aircargo-47e88.firebaseapp.com",
   projectId: "aircargo-47e88",
-  storageBucket: "aircargo-47e88.appspot.com",
+  storageBucket: "aircargo-47e88.firebasestorage.app",
   messagingSenderId: "470737816303",
-  appId: "1:470737816303:web:dummy-app-id",
+  appId: "1:470737816303:web:150d7137b466bcc0fd691a",
+  measurementId: "G-B6B9HCE6C0"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/ui/navbar";
@@ -345,7 +344,10 @@ const CargoTrackingDetailPage = () => {
                         <div className="flex flex-wrap items-center gap-2">
                           <h4 className="font-medium">{step.title}</h4>
                           {step.status === 'in-progress' && (
-                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            <Badge
+                              variant="outline"
+                              className="bg-blue-50 text-blue-700 border-blue-200"
+                            >
                               In Progress
                             </Badge>
                           )}
@@ -430,11 +432,14 @@ const CargoTrackingDetailPage = () => {
                           <TableCell className="font-medium">{doc.name}</TableCell>
                           <TableCell>{doc.date}</TableCell>
                           <TableCell>
-                            <Badge className={`${
-                              doc.status === "Approved" 
-                                ? "bg-green-100 text-green-800" 
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}>
+                            <Badge
+                              variant="default"
+                              className={`${
+                                doc.status === "Approved" 
+                                  ? "bg-green-100 text-green-800" 
+                                  : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
                               {doc.status}
                             </Badge>
                           </TableCell>
